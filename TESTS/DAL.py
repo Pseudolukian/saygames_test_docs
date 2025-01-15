@@ -9,20 +9,33 @@ sys.path.insert(0, root_path)
 from DB.session import get_db
 from DB.Pydantic_models import GAME_add_main_info, GAME_add_stats_info
 from DB.DAL import DAL_games
+from data_tests import games_name, genre, platform
+from random import randint
+import random, string
 
-test_data =[
+test_data_input_games = [
  GAME_add_main_info(name = "test_game", genre = "FPS", developer = "Me", platform = "iOS"),
- GAME_add_stats_info(game_id=1, stars=20, players_total= 20, players_online= 10, production_date="2024-10-13", current_version="v1.0")
+ GAME_add_stats_info(game_id=1, players_total= 10, players_online= 15, production_date="2024-10-13", current_version="v1.2")
 ]
 
 
-async def main():
+async def add_data():
     session = get_db
     dal = DAL_games(db=session)
-    #add_game = await dal.add_game_main_info(game_data=test_data[0])
-    add_game_static_data = await dal.add_game_static_info(game_data=test_data[1])
-    print(add_game_static_data)
+    count = 0
+    for name in games_name:
+        input_data = GAME_add_main_info(name = name, genre = genre[randint(0,len(genre)-1)], 
+                                        platform = platform[randint(0,len(platform)-1)],
+                                        developer = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5)))
+        add_game_main_data = await dal.add_game_main_info(game_data=input_data)
+        count+=1
+    return f"{count} games added to BD."
 
+async def get_full_games_list():
+    session = get_db
+    dal = DAL_games(db=session)
+    games_list = await dal.get_games_list(req_type = "Slasher")
+    return games_list
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    asyncio.run(get_full_games_list())

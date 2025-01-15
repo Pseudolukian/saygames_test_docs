@@ -5,7 +5,7 @@ import uvicorn
 main_api_router = APIRouter()
 app = FastAPI()
 
-main_api_router.include_router(game_router, prefix="/game", tags=["game"])
+main_api_router.include_router(game_router)
 app.include_router(main_api_router)
 
 if __name__ == "__main__":
