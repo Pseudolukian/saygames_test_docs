@@ -1,4 +1,4 @@
 **__pycache__/
 .alembic.ini
 .Pipfile
-/alembic
+**alembic/

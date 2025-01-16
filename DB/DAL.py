@@ -1,8 +1,9 @@
 #===============DB imports=============#
 from DB.Pydantic_models import GAME_add_main_info, GAME_add_stats_info, GAME_full_data_return, GET_games_list, GAMES_list_return, GAME_short_data_return
 from DB.session import get_db
-from DB.SQL_models import Games_main_info, Games_static_info
+from DB.SQL_models import Games_main_info, Games_static_info, USER_data
 from DB.ERRORS import GameAlreadyExistsError, GameIdNotFindError, GameIdFieldRequireError
+from DB.Pydantic_models import USER_create, USER_data_add, USER_success_created
 
 #===============sqlalchemy imports=============#
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -90,3 +91,21 @@ class DAL_games:
                 final_result.total = len(games)
                 final_result.offset = req_offset
         return final_result
+
+class USER:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+
+    async def user_create(self, name: str, password: str):
+        user_add_data = USER_data_add(name = name, password = password)
+
+        req = insert(USER_data).values(**user_add_data.model_dump())
+        
+        
+        async with self.db() as session:
+            async with session.begin():
+                await session.execute(req)
+                await session.commit()
+        
+        final = USER_success_created(uuid=user_add_data.uuid)        
+        return final

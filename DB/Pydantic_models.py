@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 from typing import List
+from uuid import UUID, uuid3, uuid1, NAMESPACE_DNS
 import datetime
 from enum import Enum
 
@@ -25,7 +26,7 @@ class Platform(str, Enum):
     ios = "iOS"
     android = "Android"
 
-#=================== Request data models ==========================#
+#================================== Request data models ==========================#
 
 class GAME_add_main_info(BaseModel):
     name:            str                     = Field(..., min_length=3)
@@ -49,6 +50,15 @@ class GET_games_list(BaseModel):
     type: GameGenre = Field(..., description="The genre type of the game.")
     limit: Optional[int] = Field(default=10, description="The maximum number of games to return.")
     offset: Optional[int] = Field(default=0, description="The number of records to skip.")
+
+
+class USER_create(BaseModel):
+    name:           str                      = Field(...)
+    password:       str                      = Field(...)
+
+class USER_data_add(USER_create):
+    uuid:           str                     = Field(default_factory=lambda: str(uuid1()))
+    api_token:      str                     = Field(default_factory=lambda: str(uuid3(NAMESPACE_DNS, "UUID_generic")))
 
 #=================== Return data models =======================#
 class TunedModel(BaseModel):
@@ -86,3 +96,7 @@ class GAMES_list_return(TunedModel):
     games: List[GAME_short_data_return] = Field(default_factory=list)
     total: int = Field(default=0)
     offset: int = Field(default=0)
+
+class USER_success_created(TunedModel):
+    uuid: UUID  = Field(default= None)
+    status: str = Field(default="User addeded.")
