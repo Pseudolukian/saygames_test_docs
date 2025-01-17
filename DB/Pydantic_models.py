@@ -100,3 +100,9 @@ class GAMES_list_return(TunedModel):
 class USER_success_created(TunedModel):
     uuid: UUID  = Field(default= None)
     status: str = Field(default="User addeded.")
+
+class USER_uuid(TunedModel):
+    uuid: UUID  = Field(default= None)
+
+class AUTH_api_token(TunedModel):
+    api_token: str = Field(default=None)

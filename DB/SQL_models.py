@@ -23,6 +23,6 @@ class USER_data(SQLModel, table=True):
     __tablename__ = 'saygames_users'
     id:             int                      = Field(primary_key=True, nullable=False, unique=True)
     uuid:           str                     = Field(nullable=False, unique=True)
-    name:           str                      = Field(nullable=False)
+    name:           str                      = Field(nullable=False, unique= True)
     password:       str                      = Field(nullable=False)
     api_token:      Optional[str]           = Field(default=None)

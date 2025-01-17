@@ -8,15 +8,10 @@ sys.path.insert(0, root_path)
 
 from DB.session import get_db
 from DB.Pydantic_models import GAME_add_main_info, GAME_add_stats_info
-from DB.DAL import DAL_games, USER
+from DB.DAL import DAL_games, USER, AUTH
 from data_tests import games_name, genre, platform
 from random import randint
 import random, string
-
-test_data_input_games = [
- GAME_add_main_info(name = "test_game", genre = "FPS", developer = "Me", platform = "iOS"),
- GAME_add_stats_info(game_id=1, players_total= 10, players_online= 15, production_date="2024-10-13", current_version="v1.2")
-]
 
 
 async def add_data():
@@ -43,5 +38,19 @@ async def create_user():
     cr_user = await dal.user_create(name="pynanist", password="sukablanaxuy")
     return cr_user
 
+async def get_uuid_user():
+    session = get_db
+    dal = USER(db=session)
+    uuid = await dal.user_get_uuid(user_name="pynanist", user_password="sukablanaxuy")
+    print(uuid)
+    return uuid
+
+async def get_api_token():
+    session = get_db
+    dal = AUTH(db=session)
+    api_token = await dal.get_api_token(user_uuid="ca0b9e92-d40b-11ef-92ca-edb0d1")
+    print(api_token)
+    return api_token
+
 if __name__ == '__main__':
-    asyncio.run(create_user())
+    asyncio.run(get_api_token())

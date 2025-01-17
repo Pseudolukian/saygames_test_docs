@@ -13,6 +13,17 @@ class GameIdNotFindError(Exception):
         return f"GameIdNotFindError: Game with id {self.game_id} not find in the database." 
 
 class GameIdFieldRequireError(Exception):
-
     def __str__(self):
-        return f"GameIdFieldRequireError: You dont enter game id parametr. "           
+        return f"GameIdFieldRequireError: You dont enter game id parametr."
+
+class UserGetUuidError(Exception):
+    def __init__(self, user_name):
+        self.user_name = user_name
+    
+    def __str__(self):
+        return f"User uuid assigned with username {self.user_name} does not find." 
+
+class WrongUserUuidError(Exception):
+    
+    def __str__(self):
+        return f"You input wrong iser uuid."      

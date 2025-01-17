@@ -1,5 +1,12 @@
 components:
   schemas:
+    AUTH_api_token:
+      properties:
+        api_token:
+          title: Api Token
+          type: string
+      title: AUTH_api_token
+      type: object
     GAMES_list_return:
       properties:
         games:
@@ -195,6 +202,14 @@ components:
           type: string
       title: USER_success_created
       type: object
+    USER_uuid:
+      properties:
+        uuid:
+          format: uuid
+          title: Uuid
+          type: string
+      title: USER_uuid
+      type: object
     ValidationError:
       properties:
         loc:
@@ -221,6 +236,32 @@ info:
   version: 0.1.0
 openapi: 3.1.0
 paths:
+  /auth/get_api_token:
+    get:
+      operationId: get_api_token_auth_get_api_token_get
+      parameters:
+      - in: query
+        name: user_uuid
+        required: true
+        schema:
+          title: User Uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AUTH_api_token'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Api Token
+      tags:
+      - Auth
   /games/add_game:
     post:
       operationId: add_game_games_add_game_post
@@ -434,5 +475,37 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       summary: Add User
+      tags:
+      - User
+  /user/user_uuid:
+    get:
+      operationId: get_user_uuid_user_user_uuid_get
+      parameters:
+      - in: query
+        name: name
+        required: true
+        schema:
+          title: Name
+          type: string
+      - in: query
+        name: password
+        required: true
+        schema:
+          title: Password
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/USER_uuid'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get User Uuid
       tags:
       - User

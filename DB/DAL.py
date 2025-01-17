@@ -2,8 +2,8 @@
 from DB.Pydantic_models import GAME_add_main_info, GAME_add_stats_info, GAME_full_data_return, GET_games_list, GAMES_list_return, GAME_short_data_return
 from DB.session import get_db
 from DB.SQL_models import Games_main_info, Games_static_info, USER_data
-from DB.ERRORS import GameAlreadyExistsError, GameIdNotFindError, GameIdFieldRequireError
-from DB.Pydantic_models import USER_create, USER_data_add, USER_success_created
+from DB.ERRORS import GameAlreadyExistsError, GameIdNotFindError, GameIdFieldRequireError, UserGetUuidError, WrongUserUuidError
+from DB.Pydantic_models import USER_create, USER_data_add, USER_success_created, AUTH_api_token
 
 #===============sqlalchemy imports=============#
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -108,4 +108,31 @@ class USER:
                 await session.commit()
         
         final = USER_success_created(uuid=user_add_data.uuid)        
+        return final
+    
+    async def user_get_uuid(self, user_name:str, user_password:str):
+        req = select(USER_data).where(USER_data.name == user_name).where(USER_data.password == user_password)
+        async with self.db() as session:
+            async with session.begin():
+                try:
+                    response = await session.execute(req)
+                    uuid = response.scalar().uuid
+                except AttributeError:
+                    raise UserGetUuidError(user_name=user_name)
+        return uuid
+
+class AUTH:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+
+    async def get_api_token(self, user_uuid:str):
+        req = select(USER_data).where(USER_data.uuid == user_uuid)
+        async with self.db() as session:
+            async with session.begin():
+                try:
+                    response = await session.execute(req)
+                    api_token = response.scalar().api_token
+                    final = AUTH_api_token(api_token=api_token)
+                except AttributeError:
+                    raise WrongUserUuidError
         return final
