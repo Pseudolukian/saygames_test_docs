@@ -27,3 +27,8 @@ class WrongUserUuidError(Exception):
     
     def __str__(self):
         return f"You input wrong iser uuid."      
+
+class WrongApiTokenError(Exception):
+    
+    def __str__(self):
+        return f"Wrong API-token."          

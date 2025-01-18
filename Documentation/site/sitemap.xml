@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>http://pynanist.xyz/doumentation/</loc>
+         <lastmod>2025-01-18</lastmod>
+    </url>
+    <url>
+         <loc>http://pynanist.xyz/doumentation/API/Endpoints/Auth/get_api_token/</loc>
+         <lastmod>2025-01-18</lastmod>
+    </url>
+    <url>
+         <loc>http://pynanist.xyz/doumentation/API/Endpoints/Game/add_game/</loc>
+         <lastmod>2025-01-18</lastmod>
+    </url>
+    <url>
+         <loc>http://pynanist.xyz/doumentation/API/Endpoints/Game/add_game_static_info/</loc>
+         <lastmod>2025-01-18</lastmod>
+    </url>
+    <url>
+         <loc>http://pynanist.xyz/doumentation/API/Endpoints/Game/get_game_full_info/</loc>
+         <lastmod>2025-01-18</lastmod>
+    </url>
+    <url>
+         <loc>http://pynanist.xyz/doumentation/API/Endpoints/Game/get_games_list/</loc>
+         <lastmod>2025-01-18</lastmod>
+    </url>
+    <url>
+         <loc>http://pynanist.xyz/doumentation/API/Endpoints/User/add_user/</loc>
+         <lastmod>2025-01-18</lastmod>
+    </url>
+    <url>
+         <loc>http://pynanist.xyz/doumentation/API/Endpoints/User/user_uuid/</loc>
+         <lastmod>2025-01-18</lastmod>
+    </url>
+</urlset>

@@ -238,6 +238,37 @@ openapi: 3.1.0
 paths:
   /auth/get_api_token:
     get:
+      description: 'API endpoint for retrieving an API token based on the user UUID.
+
+
+        ### Query Parameters
+
+
+        The request must include the following query parameter:
+
+
+        - **user_uuid** (string): The UUID of the user for whom the API token is being
+        requested. (Required)
+
+
+        ### Response
+
+
+        On success, returns a JSON object with the following field:
+
+
+        - **api_token** (string): The API token associated with the specified user.
+
+
+        ### Errors
+
+
+        Possible error responses:
+
+
+        - **400 Bad Request**: If the provided user UUID does not match any existing
+        user in the database, this error will be raised with a message indicating
+        that an incorrect user UUID was provided.'
       operationId: get_api_token_auth_get_api_token_get
       parameters:
       - in: query
@@ -264,6 +295,22 @@ paths:
       - Auth
   /games/add_game:
     post:
+      description: "API endpoint for adding a new game to the database.\n\n### Request\
+        \ Body\n\nThe request must include the following fields in JSON format:\n\n\
+        - **game_data**: An object containing the details of the game to be added.\n\
+        \    - **name** (string): The name of the game. (Required)\n    - **type**\
+        \ (string): The genre of the game. Default is \"action\".\n    - **platform**\
+        \ (string): The platform for which the game is developed. Default is \"ios\"\
+        .\n    - **developer** (string, optional): The name of the game's developer.\n\
+        \n### Response\n\nOn success, returns a JSON object with the following fields:\n\
+        \n- **game_id** (integer): The unique identifier for the newly added game.\n\
+        - **game_name** (string): The name of the added game.\n- **status** (string):\
+        \ A message indicating that the game was successfully added. Default is \"\
+        Game was added.\"\n\n### Errors\n\nPossible error responses:\n\n- **400 Bad\
+        \ Request**: If a game with the same name already exists in the database,\
+        \ this error will be raised with a message indicating that the game already\
+        \ exists.\n- **404 Not Found**: If the specified game ID is not found in the\
+        \ database."
       operationId: add_game_games_add_game_post
       parameters:
       - in: query
@@ -274,7 +321,7 @@ paths:
           title: Name
           type: string
       - in: query
-        name: type
+        name: genre
         required: false
         schema:
           $ref: '#/components/schemas/GameGenre'
@@ -311,6 +358,66 @@ paths:
       - Game
   /games/add_game_static_info:
     post:
+      description: 'API endpoint for adding static information about a game to the
+        database.
+
+
+        ### Request Body
+
+
+        The request must include the following fields in JSON format:
+
+
+        - **game_id** (integer): The unique identifier for the game. (Required)
+
+        - **stars** (integer, optional): The rating of the game, represented as stars.
+        (1-5)
+
+        - **players_total** (integer, optional): The total number of players that
+        can play the game.
+
+        - **players_online** (integer, optional): The current number of players online.
+
+        - **production_date** (string, optional): The date when the game was produced.
+        Format: yyyy-mm-dd.
+
+        - **current_version** (string, optional): The current version of the game.
+        Recommended format: vN.M (where N is the major version and M is the minor
+        version).
+
+
+        ### Response
+
+
+        On success, returns a JSON object with the following fields:
+
+
+        - **game_id** (integer): The unique identifier for the game.
+
+        - **stars** (integer, optional): The rating of the game.
+
+        - **players_total** (integer, optional): The total number of players for the
+        game.
+
+        - **players_online** (integer, optional): The current number of players online.
+
+        - **production_date** (string, optional): The production date of the game.
+
+        - **current_version** (string, optional): The current version of the game.
+
+        - **status** (string): A message indicating that the static data was successfully
+        added. Default is "Static data was successfully added."
+
+
+        ### Errors
+
+
+        Possible error responses:
+
+
+        - **400 Bad Request**: If the specified game ID is not found in the database,
+        this error will be raised with a message indicating that the game ID was not
+        found.'
       operationId: add_game_static_info_games_add_game_static_info_post
       parameters:
       - in: query
@@ -378,6 +485,63 @@ paths:
       - Game
   /games/get_game_full_info:
     get:
+      description: 'API endpoint for retrieving full information about a game based
+        on its ID.
+
+
+        ### Query Parameters
+
+
+        The request must include the following query parameter:
+
+
+        - **game_id** (integer): The unique identifier for the game. (Required)
+
+
+        ### Response
+
+
+        On success, returns a JSON object with the following fields:
+
+
+        - **id** (integer, optional): The unique identifier for the record in the
+        database.
+
+        - **game_id** (integer, optional): The unique identifier for the game.
+
+        - **name** (string, optional): The name of the game.
+
+        - **genre** (string, optional): The genre of the game (e.g., action, adventure).
+
+        - **platform** (string, optional): The platform on which the game is available
+        (e.g., PC, console).
+
+        - **developer** (string, optional): The name of the developer of the game.
+
+        - **stars** (integer, optional): The rating of the game, represented as stars
+        (1-5).
+
+        - **players_total** (integer, optional): The total number of players that
+        can play the game.
+
+        - **players_online** (integer, optional): The current number of players online.
+
+        - **production_date** (string, optional): The production date of the game.
+        Format: yyyy-mm-dd.
+
+        - **current_version** (string, optional): The current version of the game.
+        Recommended format: vN.M (where N is the major version and M is the minor
+        version).
+
+
+        ### Errors
+
+
+        Possible error responses include:
+
+
+        - **404 Not Found**: If a game with the specified game ID does not exist in
+        the database, this error will be raised indicating that the game was not found.'
       operationId: get_game_full_info_games_get_game_full_info_get
       parameters:
       - in: query
@@ -404,6 +568,22 @@ paths:
       - Game
   /games/get_games_list:
     get:
+      description: "API endpoint for retrieving a list of games based on search parameters.\n\
+        \n### Query Parameters\n\nThe request can include the following query parameters:\n\
+        \n- **type** (string, optional): The genre or type of games to filter by (e.g.,\
+        \ action, adventure).\n- **limit** (integer, optional): The maximum number\
+        \ of games to return in the response. Default is 10.\n- **offset** (integer,\
+        \ optional): The number of games to skip before starting to collect the result\
+        \ set. This is used for pagination. Default is 0.\n\n### Response\n\nOn success,\
+        \ returns a JSON object with the following fields:\n\n- **games** (array of\
+        \ objects): A list of games that match the search criteria. Each game object\
+        \ contains:\n    - **id** (integer): The unique identifier for the game.\n\
+        \    - **game_id** (integer): The unique identifier for the game.\n    - **name**\
+        \ (string): The name of the game.\n    - **genre** (string): The genre of\
+        \ the game.\n    - **platform** (string): The platform on which the game is\
+        \ available.\n    - **developer** (string): The name of the developer of the\
+        \ game.\n- **total** (integer): The total number of games that match the search\
+        \ criteria.\n- **offset** (integer): The offset used in the request for pagination."
       operationId: get_games_list_games_get_games_list_get
       parameters:
       - in: query
@@ -447,6 +627,40 @@ paths:
       - Game
   /user/add_user:
     post:
+      description: 'API endpoint for adding a new user to the database.
+
+
+        ### Request Body
+
+
+        The request must include a JSON object with the following fields:
+
+
+        - **name** (string): The name of the user. (Required)
+
+        - **password** (string): The password for the user. (Required)
+
+
+        ### Response
+
+
+        On success, returns a JSON object with the following fields:
+
+
+        - **uuid** (string): The unique identifier (UUID) of the newly created user.
+
+        - **status** (string): A message indicating that the user has been successfully
+        added. Default is "User added."
+
+
+        ### Errors
+
+
+        Possible error responses include:
+
+
+        - **400 Bad Request**: This could occur if required fields are missing or
+        invalid.'
       operationId: add_user_user_add_user_post
       parameters:
       - in: query
@@ -479,6 +693,39 @@ paths:
       - User
   /user/user_uuid:
     get:
+      description: 'API endpoint for retrieving the UUID of a user based on their
+        credentials.
+
+
+        ### Request Body
+
+
+        The request must include a JSON object with the following fields:
+
+
+        - **name** (string): The name of the user. (Required)
+
+        - **password** (string): The password of the user. (Required)
+
+
+        ### Response
+
+
+        On success, returns a JSON object with the following field:
+
+
+        - **uuid** (string): The unique identifier (UUID) assigned to the user.
+
+
+        ### Errors
+
+
+        Possible error responses include:
+
+
+        - **400 Bad Request**: If the provided username and password do not match
+        any existing user, this error will be raised with a message indicating that
+        the user UUID could not be found.'
       operationId: get_user_uuid_user_user_uuid_get
       parameters:
       - in: query

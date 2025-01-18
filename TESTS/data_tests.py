@@ -13,3 +13,5 @@ genre = ["Arcade", "Clicker", "Slasher", "Simulation", "Puzzle", "Battle Royale"
          "Trivia", "Runner", "Action", "Time Management", "Survival"]
 
 platform = ["iOS", "Android"]
+
+api_kokens = {"liquid":"eafcd723-44a7-3aef-9d57-e6eec77ecc5e", "wrong":"eafcd723-44a7-3aef-9d57-e6eec77ecc"}

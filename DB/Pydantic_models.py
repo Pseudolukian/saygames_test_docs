@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 from typing import List
-from uuid import UUID, uuid3, uuid1, NAMESPACE_DNS
+from uuid import UUID, uuid1, uuid4
 import datetime
 from enum import Enum
 
@@ -27,12 +27,16 @@ class Platform(str, Enum):
     android = "Android"
 
 #================================== Request data models ==========================#
+class CHECK_Api_Token(BaseModel):
+    api_token:       str                     = Field(..., description = "API-token (UUID_3) for connection to API gateway.")
+
 
 class GAME_add_main_info(BaseModel):
     name:            str                     = Field(..., min_length=3)
-    type:            GameGenre               = Field(default = GameGenre.action, description="The genre type of the game.")
+    genre:            GameGenre               = Field(default = GameGenre.action, description="The genre type of the game.")
     platform:        Platform                = Field(default=Platform.ios, description="The game platform")
     developer:       Optional[str]           = Field(default = None)
+    
 
 class GAME_add_stats_info(BaseModel):
     game_id:         int                     = Field(...)
@@ -42,15 +46,13 @@ class GAME_add_stats_info(BaseModel):
     production_date: Optional[datetime.date] = Field(default = None, description="Data format: yyyy-mm-dd. Separator: -")
     current_version: Optional[str]           = Field(default = None, description="Recomended format: vN.M: N - major ver, M - minor ver.")
 
-
 class GET_full_game_data(BaseModel):
     game_id:         int                     = Field(...)
 
 class GET_games_list(BaseModel):
-    type: GameGenre = Field(..., description="The genre type of the game.")
-    limit: Optional[int] = Field(default=10, description="The maximum number of games to return.")
-    offset: Optional[int] = Field(default=0, description="The number of records to skip.")
-
+    type:            GameGenre               = Field(..., description="The genre type of the game.")
+    limit:           Optional[int]           = Field(default=10, description="The maximum number of games to return.")
+    offset:          Optional[int]           = Field(default=0, description="The number of records to skip.")
 
 class USER_create(BaseModel):
     name:           str                      = Field(...)
@@ -58,7 +60,7 @@ class USER_create(BaseModel):
 
 class USER_data_add(USER_create):
     uuid:           str                     = Field(default_factory=lambda: str(uuid1()))
-    api_token:      str                     = Field(default_factory=lambda: str(uuid3(NAMESPACE_DNS, "UUID_generic")))
+    api_token:      str                     = Field(default_factory=lambda: str(uuid4()))
 
 #=================== Return data models =======================#
 class TunedModel(BaseModel):
@@ -66,12 +68,18 @@ class TunedModel(BaseModel):
         from_attributes = True
 
 class GAME_success_addeded_main_data(TunedModel):
-    game_name: str = None
     game_id: int = None
+    game_name: str = None
     status: str = Field(default="Game was added.")
 
 class GAME_success_addeded_static_info(TunedModel, GAME_add_stats_info):
-    status: str = Field(default="Static data was succesed added.")
+    stars:           Optional[int]           = Field(default = None)          
+    players_total:   Optional[int]           = Field(default = None)          
+    players_online:  Optional[int]           = Field(default = None)        
+    production_date: Optional[datetime.date] = Field(default = None, description="Data format: yyyy-mm-dd. Separator: -")
+    current_version: Optional[str]           = Field(default = None, description="Recomended format: vN.M: N - major ver, M - minor ver.")
+    status:          str                     = Field(default="Static data was succesed added.")
+
 
 class GAME_full_data_return(TunedModel):
     id:              Optional[int]           = Field(default = None)
