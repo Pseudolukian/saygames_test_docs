@@ -11,7 +11,8 @@ tags_metadata = [
     }
 ]
 main_api_router = APIRouter()
-app = FastAPI()
+app = FastAPI(root_path="/api",
+        docs_url="/")
 
 main_api_router.include_router(game_router)
 main_api_router.include_router(user_router)
