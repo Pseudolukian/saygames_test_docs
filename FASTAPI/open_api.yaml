@@ -340,6 +340,12 @@ paths:
           - type: string
           - type: 'null'
           title: Developer
+      - in: query
+        name: api_token
+        required: true
+        schema:
+          title: Api Token
+          type: string
       responses:
         '200':
           content:
@@ -467,6 +473,12 @@ paths:
           - type: string
           - type: 'null'
           title: Current Version
+      - in: query
+        name: api_token
+        required: true
+        schema:
+          title: Api Token
+          type: string
       responses:
         '200':
           content:
@@ -550,6 +562,12 @@ paths:
         schema:
           title: Game Id
           type: integer
+      - in: query
+        name: api_token
+        required: true
+        schema:
+          title: Api Token
+          type: string
       responses:
         '200':
           content:
@@ -609,6 +627,12 @@ paths:
           - type: 'null'
           default: 0
           title: Offset
+      - in: query
+        name: api_token
+        required: true
+        schema:
+          title: Api Token
+          type: string
       responses:
         '200':
           content:

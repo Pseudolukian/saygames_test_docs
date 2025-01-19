@@ -29,7 +29,7 @@ async def auto_add_main_game_data():
 async def manual_add_main_game_data():
     session = get_db
     dal = DAL_games(db=session)
-    input_data = GAME_add_main_info(name = "test_01", genre = genre[randint(0,len(genre)-1)], platform = platform[randint(0,len(platform)-1)], developer = "tester")
+    input_data = GAME_add_main_info(name = "test_10", genre = genre[randint(0,len(genre)-1)], platform = platform[randint(0,len(platform)-1)], developer = "tester")
     add_game_main_data = await dal.add_game_main_info(game_data=input_data, api_token="eafcd723-44a7-3aef-9d57-e6eec77ecc5e")
     print(add_game_main_data)
     return f"Game {input_data.name} added to BD."
@@ -87,4 +87,4 @@ async def get_api_token():
     return api_token
 
 if __name__ == '__main__':
-    asyncio.run(get_full_games_list())
+    asyncio.run(manual_add_main_game_data())

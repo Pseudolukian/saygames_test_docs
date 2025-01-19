@@ -42,12 +42,14 @@ Possible error responses:
 - **404 Not Found**: If the specified game ID is not found in the database."""
 
 @game_router.post("/add_game", response_model = GAME_success_addeded_main_data, description = add_game_router_info)
-async def add_game(add_game_main_data: GAME_add_main_info = Depends(GAME_add_main_info)):
+
+async def add_game(add_game_main_data: GAME_add_main_info = Depends(GAME_add_main_info), api_token:CHECK_Api_Token = Depends(CHECK_Api_Token)):
     __doc__ = add_game_router_info
     try:
         dal_games = DAL_games(db=get_db)
-        added_game = await dal_games.add_game_main_info(game_data=add_game_main_data)
-        response = GAME_success_addeded_main_data(game_name = added_game.name, game_id = added_game.id)
+        added_game = await dal_games.add_game_main_info(game_data = add_game_main_data, api_token = api_token.api_token)
+        
+        response = GAME_success_addeded_main_data(game_name=added_game.game_name, game_id=added_game.game_id)
     except GameAlreadyExistsError as err:
         raise HTTPException(status_code=400, detail=str(err))
     return response
@@ -87,11 +89,12 @@ Possible error responses:
 """
 
 @game_router.post("/add_game_static_info", response_model=GAME_success_addeded_static_info, description = add_game_static_info_router_info)
-async def add_game_static_info(add_game_static_data: GAME_add_stats_info = Depends(GAME_add_stats_info)):
+
+async def add_game_static_info(add_game_static_data: GAME_add_stats_info = Depends(GAME_add_stats_info), api_token:CHECK_Api_Token = Depends(CHECK_Api_Token)):
     __doc__ = add_game_static_info_router_info
     try:
         dal_games = DAL_games(db=get_db)
-        result = await dal_games.add_game_static_info(game_data=add_game_static_data)
+        result = await dal_games.add_game_static_info(game_data=add_game_static_data, api_token = api_token.api_token)
         response = GAME_success_addeded_static_info(**result.model_dump())
     except GameIdNotFindError as err:
         raise HTTPException(status_code=400, detail=str(err))     
@@ -130,10 +133,11 @@ Possible error responses include:
 """
 
 @game_router.get("/get_game_full_info", response_model = GAME_full_data_return, description = get_game_full_info_router_info)
-async def get_game_full_info(get_id: GET_full_game_data = Depends(GET_full_game_data)):
+
+async def get_game_full_info(get_id: GET_full_game_data = Depends(GET_full_game_data), api_token:CHECK_Api_Token = Depends(CHECK_Api_Token)):
     __doc__ = get_game_full_info_router_info
     dal_games = DAL_games(db=get_db)
-    result = await dal_games.get_full_game_data(game_id=get_id.game_id)
+    result = await dal_games.get_full_game_data(game_id=get_id.game_id, api_token = api_token.api_token)
     response = GAME_full_data_return(**result.model_dump())
     return response
 
@@ -163,8 +167,9 @@ On success, returns a JSON object with the following fields:
 - **offset** (integer): The offset used in the request for pagination.
 """
 @game_router.get("/get_games_list", response_model = GAMES_list_return, description = get_games_list_router_info)
-async def get_games_list(get_serch_list_params: GET_games_list = Depends(GET_games_list)):
+
+async def get_games_list(get_serch_list_params: GET_games_list = Depends(GET_games_list), api_token:CHECK_Api_Token = Depends(CHECK_Api_Token)):
     __doc__ = get_games_list_router_info
     dal_games = DAL_games(db=get_db)
-    result = await dal_games.get_games_list(req_type=get_serch_list_params.type, req_limit= get_serch_list_params.limit, req_offset= get_serch_list_params.offset)
+    result = await dal_games.get_games_list(req_type=get_serch_list_params.type, req_limit= get_serch_list_params.limit, req_offset= get_serch_list_params.offset, api_token = api_token.api_token)
     return result

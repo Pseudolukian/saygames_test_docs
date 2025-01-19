@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter
 from Routers.GAME import game_router
 from Routers.USER import user_router
 from Routers.AUTH import auth_router
+from fastapi.responses import HTMLResponse
 from oapi import custom_openapi, export_open_api_to_yaml
 import uvicorn
 tags_metadata = [
